@@ -1,4 +1,4 @@
-import { post } from "axios";
+import axios from "axios";
 
 const DEFAULT_HEADERS = {
   "Content-Type": "application/json",
@@ -69,7 +69,7 @@ export default class SlackClient {
     );
 
     try {
-      const response = await post(url, data, {
+      const response = await axios.post(url, data, {
         headers: DEFAULT_HEADERS,
       });
       console.log("[SlackClient] Response:", response.data);

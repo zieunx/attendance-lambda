@@ -32,16 +32,16 @@ Resources:
       Policies:
         # Give Create/Read/Update/Delete Permissions to the SampleTable
         - DynamoDBCrudPolicy:
-            TableName: !Ref AttandanceTableName
+            TableName: !Ref AttandanceTable
         - DynamoDBCrudPolicy:
-            TableName: !Ref GitConnectionTableName
+            TableName: !Ref GitConnectionTable
         - DynamoDBCrudPolicy:
             TableName: !Ref UserTableName
       Environment:
         Variables:
           # Make table names accessible as environment variables from function code during execution
-          ATTENDANCE_TABLE: !Ref AttandanceTableName
-          GIT_CONNECTION_TABLE: !Ref GitConnectionTableName
+          ATTENDANCE_TABLE: !Ref AttandanceTable
+          GIT_CONNECTION_TABLE: !Ref GitConnectionTable
           USER_TABLE: !Ref UserTableName
       Events:
         Api:
@@ -53,13 +53,24 @@ Resources:
   # https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlesssimpletable
 
   # DynamoDB table to store item: {id: &lt;ID&gt;, name: &lt;NAME&gt;}
-  SampleTable:
+  AttandanceTable:
     Type: AWS::DynamoDB::Attendance
     Properties:
       PrimaryKey:
         PartitionKeyName: userGithubId
         PartitionKeyType: String
         SortKeyName: eventDateTime
+        SortKeyType: String
+      ProvisionedThroughput:
+        ReadCapacityUnits: 2
+        WriteCapacityUnits: 2
+  GitConnectionTable:
+    Type: AWS::DynamoDB::GitConnection
+    Properties:
+      PrimaryKey:
+        PartitionKeyName: gitId
+        PartitionKeyType: String
+        SortKeyName: userId
         SortKeyType: String
       ProvisionedThroughput:
         ReadCapacityUnits: 2

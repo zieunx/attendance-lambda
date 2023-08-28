@@ -2,11 +2,13 @@
     "name": "delete-test-01",
     "description": "delete-test-01-description",
     "version": "0.0.1",
+    "type": "module",
     "private": true,
     "dependencies": {
         "@aws-sdk/client-dynamodb": "^3.188.0",
         "@aws-sdk/lib-dynamodb": "^3.188.0",
         "axios": "^1.4.0",
+        "axios-mock-adapter": "^1.21.5",
         "crypto": "^1.0.1"
     },
     "devDependencies": {

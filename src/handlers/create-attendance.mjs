@@ -2,6 +2,7 @@ import { createAttendance } from "../service/AttendanceService.mjs";
 import { success } from "../common/Response.mjs";
 
 export const createAttendanceHandler = async (event) => {
+  console.log("테스트 ");
   const requestBody = JSON.parse(event.body);
   // const requestBody = event;
   console.log("[index] event: ", JSON.stringify(event));
