@@ -16,6 +16,8 @@
         "jest": "^29.2.1"
     },
     "scripts": {
+        "sam:invoke": "DOCKER_HOST=unix://$HOME/.docker/run/docker.sock sam local invoke",
+        "sam:build": "sam build",
         "test": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js"
     },
     "jest": {

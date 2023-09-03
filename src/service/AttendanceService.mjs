@@ -2,7 +2,7 @@ import { putItem } from "../repository/AttendanceRepository.mjs";
 import { findByGitId } from "../repository/UserRepository.mjs";
 import {
   sendMessage,
-  TEST_CHANNEL_URL,
+  testChannelUrl,
   getAttachments,
 } from "../infra/SlackClient.mjs";
 
@@ -75,7 +75,7 @@ export default class AttendanceService {
       const user = await findByGitId(userGithubId);
       console.log("[AttendanceService] user: ", JSON.stringify(user));
 
-      await sendMessage(TEST_CHANNEL_URL, getAttachments(user, attendance));
+      await sendMessage(testChannelUrl, getAttachments(user, attendance));
     }
   }
 }

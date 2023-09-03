@@ -11,7 +11,7 @@ sam local invoke
 코드 수정 후 다시 테스트 하려면 빌드해줘야 한다.
 
 ```
-sam local invoke
+sam build
 ```
 
 ## 참고사항
