@@ -1,10 +1,6 @@
-import { putItem } from "../repository/AttendanceRepository.mjs";
-import { findByGitId } from "../repository/UserRepository.mjs";
-import {
-  sendMessage,
-  testChannelUrl,
-  getAttachments,
-} from "../infra/SlackClient.mjs";
+import AttendanceRepository from "../repository/AttendanceRepository.mjs";
+import UserRepository from "../repository/UserRepository.mjs";
+import SlackClient from "../infra/SlackClient.mjs";
 
 const ATTENDANCE_CHANNEL_CODE = "C05E427CX7U";
 
@@ -65,17 +61,20 @@ export default class AttendanceService {
     // if (!requestBody.event.channel || requestBody.event.channel != ATTENDANCE_CHANNEL_CODE) {
     // return;
     // }
-    const repositoryResult = await putItem(attendance);
+    const repositoryResult = await AttendanceRepository.putItem(attendance);
     console.log(
       "[AttendanceService] repository result code: ",
       repositoryResult.$metadata.httpStatusCode
     );
 
     if (repositoryResult.$metadata.httpStatusCode == 200) {
-      const user = await findByGitId(userGithubId);
+      const user = await UserRepository.findByGitId(userGithubId);
       console.log("[AttendanceService] user: ", JSON.stringify(user));
 
-      await sendMessage(testChannelUrl, getAttachments(user, attendance));
+      await SlackClient.sendMessage(
+        SlackClient.testChannelUrl,
+        SlackClient.getAttachments(user, attendance)
+      );
     }
   }
 }
