@@ -32,7 +32,7 @@ Resources:
       Policies:
         # Give Create/Read/Update/Delete Permissions to the SampleTable
         - DynamoDBCrudPolicy:
-            TableName: !Ref AttandanceTable
+            TableName: !Ref AttendanceTable
         - DynamoDBCrudPolicy:
             TableName: !Ref GitConnectionTable
         - DynamoDBCrudPolicy:
@@ -40,9 +40,9 @@ Resources:
       Environment:
         Variables:
           # Make table names accessible as environment variables from function code during execution
-          ATTENDANCE_TABLE: !Ref AttandanceTable
-          GIT_CONNECTION_TABLE: !Ref GitConnectionTable
-          USER_TABLE: !Ref UserTableName
+          ATTENDANCE_TABLE: Attendance
+          GIT_CONNECTION_TABLE: GitConnection
+          USER_TABLE: User
       Events:
         Api:
           Type: Api
@@ -53,9 +53,10 @@ Resources:
   # https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlesssimpletable
 
   # DynamoDB table to store item: {id: &lt;ID&gt;, name: &lt;NAME&gt;}
-  AttandanceTable:
+  AttendanceTable:
     Type: AWS::DynamoDB::Attendance
     Properties:
+      TableName: Attendance
       PrimaryKey:
         PartitionKeyName: userGithubId
         PartitionKeyType: String
@@ -67,10 +68,23 @@ Resources:
   GitConnectionTable:
     Type: AWS::DynamoDB::GitConnection
     Properties:
+      TableName: GitConnection
       PrimaryKey:
         PartitionKeyName: gitId
         PartitionKeyType: String
         SortKeyName: userId
+        SortKeyType: String
+      ProvisionedThroughput:
+        ReadCapacityUnits: 2
+        WriteCapacityUnits: 2
+  GitConnectionTable:
+    Type: AWS::DynamoDB::User
+    Properties:
+      TableName: User
+      PrimaryKey:
+        PartitionKeyName: id
+        PartitionKeyType: String
+        SortKeyName: createdAt
         SortKeyType: String
       ProvisionedThroughput:
         ReadCapacityUnits: 2

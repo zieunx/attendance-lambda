@@ -1,3 +1,40 @@
 {
-    "httpMethod": "GET"
-}
+    "version": "2.0",
+    "routeKey": "POST /attendance",
+    "rawPath": "/default/attendance",
+    "rawQueryString": "",
+    "headers": {
+      "accept": "*/*",
+      "accept-encoding": "gzip,deflate",
+      "content-length": "1453",
+      "content-type": "application/json",
+      "host": "trjc2id3oj.execute-api.ap-northeast-2.amazonaws.com",
+      "user-agent": "Slackbot 1.0 (+https://api.slack.com/robots)",
+      "x-amzn-trace-id": "Root=1-64d66edf-6f7c331e1395cde34d253d4b",
+      "x-forwarded-for": "50.16.132.9",
+      "x-forwarded-port": "443",
+      "x-forwarded-proto": "https",
+      "x-slack-request-timestamp": "1691774686",
+      "x-slack-signature": "v0=b7bf696dc9553e951fc864c57c742df6f1e80f04de76e6a00b66f665594619c2"
+    },
+    "requestContext": {
+      "accountId": "745406373856",
+      "apiId": "trjc2id3oj",
+      "domainName": "trjc2id3oj.execute-api.ap-northeast-2.amazonaws.com",
+      "domainPrefix": "trjc2id3oj",
+      "http": {
+        "method": "POST",
+        "path": "/default/attendance",
+        "protocol": "HTTP/1.1",
+        "sourceIp": "50.16.132.9",
+        "userAgent": "Slackbot 1.0 (+https://api.slack.com/robots)"
+      },
+      "requestId": "JgZC8j9GoE0EPEQ=",
+      "routeKey": "POST /attendance",
+      "stage": "default",
+      "time": "11/Aug/2023:17:24:47 +0000",
+      "timeEpoch": 1691774687389
+    },
+    "body": "{\"token\":\"RHe0VSmncYk7WdtqEhiE5MEc\",\"team_id\":\"T05DKCTATSM\",\"context_team_id\":\"T05DKCTATSM\",\"context_enterprise_id\":null,\"api_app_id\":\"A05D3SCA3UM\",\"event\":{\"type\":\"message\",\"text\":\"\",\"user\":\"U05DWF0H4L8\",\"ts\":\"1691774686.151149\",\"team\":\"T05DKCTATSM\",\"attachments\":[{\"id\":1,\"footer_icon\":\"https:\\/\\/slack.github.com\\/static\\/img\\/favicon-neutral.png\",\"color\":\"D0D0D0\",\"from_url\":\"https:\\/\\/2023til100.slack.com\\/archives\\/C05E427CX7U\\/p1691772611757559\",\"is_share\":true,\"fallback\":\"[zieunx\\/lambda-layer] 1 new commit pushed to _main_ by zieunx\",\"text\":\"`<https:\\/\\/github.com\\/zieunx\\/lambda-layer\\/commit\\/9d414cdd50fbe2a0783112a1b12cd34389817f76|9d414cdd>` - chor: axios \\ucd94\\uac00\",\"pretext\":\"<https:\\/\\/github.com\\/zieunx\\/lambda-layer\\/compare\\/837fcd533503...9d414cdd50fb|1 new commit> pushed to `<https:\\/\\/github.com\\/zieunx\\/lambda-layer\\/tree\\/main|main>` by <https:\\/\\/github.com\\/zieunx|zieunx>\",\"footer\":\"<https:\\/\\/github.com\\/zieunx\\/lambda-layer|zieunx\\/lambda-layer>\",\"mrkdwn_in\":[\"text\"]}],\"channel\":\"C05M7C39H3J\",\"event_ts\":\"1691774686.151149\",\"channel_type\":\"channel\"},\"type\":\"event_callback\",\"event_id\":\"Ev05MUNY8W73\",\"event_time\":1691774686,\"authorizations\":[{\"enterprise_id\":null,\"team_id\":\"T05DKCTATSM\",\"user_id\":\"U05DKDZLQ3B\",\"is_bot\":true,\"is_enterprise_install\":false}],\"is_ext_shared_channel\":false,\"event_context\":\"4-eyJldCI6Im1lc3NhZ2UiLCJ0aWQiOiJUMDVES0NUQVRTTSIsImFpZCI6IkEwNUQzU0NBM1VNIiwiY2lkIjoiQzA1TTdDMzlIM0oifQ\"}",
+    "isBase64Encoded": false
+  }

@@ -5,7 +5,7 @@ codeuri = "/Users/zieunx/zieun/project/attendance-app"
 runtime = "nodejs18.x"
 architecture = "x86_64"
 handler = "src/handlers/create-attendance.createAttendanceHandler"
-manifest_hash = "678994ec39ab74c90c7520ee8998e2fe"
+manifest_hash = "11dea33476134142019ff8ab58fab190"
 packagetype = "Zip"
 functions = ["createAttendaceFunction"]
 

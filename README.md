@@ -6,6 +6,8 @@
 
 ```
 sam local invoke
+// 특정 이벤트로 실행
+sam local invoke -e {이벤트json파일}
 ```
 
 코드 수정 후 다시 테스트 하려면 빌드해줘야 한다.
