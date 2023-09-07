@@ -16,6 +16,10 @@ sam local invoke -e {이벤트json파일}
 sam build
 ```
 
+```
+sam deploy --guided
+```
+
 ## 참고사항
 
 ### sam-cli local test 시 주의 사항
