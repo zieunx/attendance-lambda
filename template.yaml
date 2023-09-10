@@ -32,11 +32,11 @@ Resources:
       Policies:
         # Give Create/Read/Update/Delete Permissions to the SampleTable
         - DynamoDBCrudPolicy:
-            TableName: !Ref AttendanceTable
+            TableName: Attendance
         - DynamoDBCrudPolicy:
-            TableName: !Ref GitConnectionTable
+            TableName: GitConnection
         - DynamoDBCrudPolicy:
-            TableName: !Ref UserTable
+            TableName: User
       Environment:
         Variables:
           # Make table names accessible as environment variables from function code during execution
@@ -53,42 +53,57 @@ Resources:
   # https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlesssimpletable
 
   # DynamoDB table to store item: {id: &lt;ID&gt;, name: &lt;NAME&gt;}
-  AttendanceTable:
-    Type: AWS::DynamoDB::Table
-    Properties:
-      TableName: Attendance
-      PrimaryKey:
-        PartitionKeyName: userGithubId
-        PartitionKeyType: String
-        SortKeyName: eventDateTime
-        SortKeyType: String
-      ProvisionedThroughput:
-        ReadCapacityUnits: 2
-        WriteCapacityUnits: 2
-  GitConnectionTable:
-    Type: AWS::DynamoDB::Table
-    Properties:
-      TableName: GitConnection
-      PrimaryKey:
-        PartitionKeyName: gitId
-        PartitionKeyType: String
-        SortKeyName: userId
-        SortKeyType: String
-      ProvisionedThroughput:
-        ReadCapacityUnits: 2
-        WriteCapacityUnits: 2
-  UserTable:
-    Type: AWS::DynamoDB::Table
-    Properties:
-      TableName: User
-      PrimaryKey:
-        PartitionKeyName: id
-        PartitionKeyType: String
-        SortKeyName: createdAt
-        SortKeyType: String
-      ProvisionedThroughput:
-        ReadCapacityUnits: 2
-        WriteCapacityUnits: 2
+  # AttendanceTable:
+  #   Type: AWS::DynamoDB::Table
+  #   Properties:
+  #     TableName: Attendance
+  #     AttributeDefinitions: # 속성 정의 추가
+  #       - AttributeName: userGithubId
+  #         AttributeType: S
+  #       - AttributeName: eventDateTime
+  #         AttributeType: S
+  #     KeySchema: # PrimaryKey 대신 이 속성 사용
+  #       - AttributeName: userGithubId
+  #         KeyType: HASH
+  #       - AttributeName: eventDateTime
+  #         KeyType: RANGE
+  #     ProvisionedThroughput:
+  #       ReadCapacityUnits: 2
+  #       WriteCapacityUnits: 2
+  # GitConnectionTable:
+  #   Type: AWS::DynamoDB::Table
+  #   Properties:
+  #     TableName: GitConnection
+  #     AttributeDefinitions:
+  #       - AttributeName: gitId
+  #         AttributeType: S
+  #       - AttributeName: userId
+  #         AttributeType: S
+  #     KeySchema:
+  #       - AttributeName: gitId
+  #         KeyType: HASH
+  #       - AttributeName: userId
+  #         KeyType: RANGE
+  #     ProvisionedThroughput:
+  #       ReadCapacityUnits: 2
+  #       WriteCapacityUnits: 2
+  # UserTable:
+  #   Type: AWS::DynamoDB::Table
+  #   Properties:
+  #     TableName: User
+  #     AttributeDefinitions:
+  #       - AttributeName: id
+  #         AttributeType: S
+  #       - AttributeName: createdAt
+  #         AttributeType: S
+  #     KeySchema:
+  #       - AttributeName: id
+  #         KeyType: HASH
+  #       - AttributeName: createdAt
+  #         KeyType: RANGE
+  #     ProvisionedThroughput:
+  #       ReadCapacityUnits: 2
+  #       WriteCapacityUnits: 2
 
   ApplicationResourceGroup:
     Type: AWS::ResourceGroups::Group
