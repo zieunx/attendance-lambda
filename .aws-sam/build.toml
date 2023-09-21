@@ -7,6 +7,6 @@ architecture = "x86_64"
 handler = "src/handlers/create-attendance.createAttendanceHandler"
 manifest_hash = "11dea33476134142019ff8ab58fab190"
 packagetype = "Zip"
-functions = ["createAttendaceFunction"]
+functions = ["createAttendanceFunction", "initMessagesFunction"]
 
 [layer_build_definitions]

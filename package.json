@@ -9,7 +9,8 @@
         "@aws-sdk/lib-dynamodb": "^3.188.0",
         "axios": "^1.4.0",
         "axios-mock-adapter": "^1.21.5",
-        "crypto": "^1.0.1"
+        "crypto": "^1.0.1",
+        "dotenv": "^16.3.1"
     },
     "devDependencies": {
         "aws-sdk-client-mock": "^2.0.0",

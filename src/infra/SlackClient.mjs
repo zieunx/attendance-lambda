@@ -1,8 +1,11 @@
 import axios from "axios";
+require('dotenv').config();
 
 const DEFAULT_HEADERS = {
   "Content-Type": "application/json",
 };
+
+const authToken = process.env.AUTHORIZATION_TOKEN;
 
 const getCurrentDate = (dateString) => {
   var now = null;
@@ -29,6 +32,7 @@ const getCurrentDate = (dateString) => {
 export default class SlackClient {
   static testChannelUrl =
     "https://hooks.slack.com/services/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";
+  static attendanceChannelCode = "C05E427CX7U";
 
   static getAttachments = (user, attendance) => {
     return [
@@ -76,5 +80,23 @@ export default class SlackClient {
     } catch (error) {
       console.error("[SlackClient] Error:", error);
     }
+  }
+
+  static async findChannelMessages(channelCode) {
+
+        try {
+          const response = await axios.get(
+              `https://slack.com/api/conversations.history?channel=${channelCode}&pretty=1`,
+              {
+                headers: {
+                  "Authorization": authToken,
+                  ...DEFAULT_HEADERS
+                }
+              }
+          );
+          console.log("[SlackClient] Response:", response.data);
+        } catch (error) {
+          console.error("[SlackClient] Error:", error);
+        }
   }
 }

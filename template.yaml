@@ -17,7 +17,7 @@ Transform:
 Resources:
   # Each Lambda function is defined by properties:
   # https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
-  createAttendaceFunction:
+  createAttendanceFunction:
     Type: AWS::Serverless::Function
     Properties:
       Handler: src/handlers/create-attendance.createAttendanceHandler
@@ -49,61 +49,24 @@ Resources:
           Properties:
             Path: /attandance
             Method: POST
-  # Simple syntax to create a DynamoDB table with a single attribute primary key, more in
-  # https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlesssimpletable
-
-  # DynamoDB table to store item: {id: &lt;ID&gt;, name: &lt;NAME&gt;}
-  # AttendanceTable:
-  #   Type: AWS::DynamoDB::Table
-  #   Properties:
-  #     TableName: Attendance
-  #     AttributeDefinitions: # 속성 정의 추가
-  #       - AttributeName: userGithubId
-  #         AttributeType: S
-  #       - AttributeName: eventDateTime
-  #         AttributeType: S
-  #     KeySchema: # PrimaryKey 대신 이 속성 사용
-  #       - AttributeName: userGithubId
-  #         KeyType: HASH
-  #       - AttributeName: eventDateTime
-  #         KeyType: RANGE
-  #     ProvisionedThroughput:
-  #       ReadCapacityUnits: 2
-  #       WriteCapacityUnits: 2
-  # GitConnectionTable:
-  #   Type: AWS::DynamoDB::Table
-  #   Properties:
-  #     TableName: GitConnection
-  #     AttributeDefinitions:
-  #       - AttributeName: gitId
-  #         AttributeType: S
-  #       - AttributeName: userId
-  #         AttributeType: S
-  #     KeySchema:
-  #       - AttributeName: gitId
-  #         KeyType: HASH
-  #       - AttributeName: userId
-  #         KeyType: RANGE
-  #     ProvisionedThroughput:
-  #       ReadCapacityUnits: 2
-  #       WriteCapacityUnits: 2
-  # UserTable:
-  #   Type: AWS::DynamoDB::Table
-  #   Properties:
-  #     TableName: User
-  #     AttributeDefinitions:
-  #       - AttributeName: id
-  #         AttributeType: S
-  #       - AttributeName: createdAt
-  #         AttributeType: S
-  #     KeySchema:
-  #       - AttributeName: id
-  #         KeyType: HASH
-  #       - AttributeName: createdAt
-  #         KeyType: RANGE
-  #     ProvisionedThroughput:
-  #       ReadCapacityUnits: 2
-  #       WriteCapacityUnits: 2
+  initMessagesFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: src/handlers/init-messages.initMessagesHandler
+      Runtime: nodejs18.x
+      Architectures:
+        - x86_64
+      MemorySize: 128
+      Timeout: 100
+      Description:
+        A simple example includes a HTTP post method to add one item to
+        a DynamoDB table.
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /init-messages
+            Method: POST
 
   ApplicationResourceGroup:
     Type: AWS::ResourceGroups::Group

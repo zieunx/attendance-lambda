@@ -1,20 +1,14 @@
-import AttendanceService from "../service/AttendanceService.mjs";
 import Response from "../common/Response.mjs";
+import SlackClient from "../infra/SlackClient.mjs";
 
-export const createAttendanceHandler = async (event) => {
-  const requestBody = JSON.parse(event.body);
-  // const requestBody = event;
-  console.log("[index] event: ", JSON.stringify(event));
-  console.log("[index] requestBody: ", JSON.stringify(requestBody));
-  if (requestBody.type == "url_verification") {
-    return Response.success({
-      challenge: requestBody.challenge,
-    });
-  }
+export const initMessagesHandler = async (event) => {
+  const slackResponse = await SlackClient.findChannelMessages(
+      SlackClient.attendanceChannelCode
+  );
 
-  await AttendanceService.createAttendance(requestBody);
+  console.log("")
 
   return Response.success({
-    message: "createAttendance",
+    message: "initMessages",
   });
 };
