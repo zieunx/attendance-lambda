@@ -1,5 +1,4 @@
 import axios from "axios";
-require('dotenv').config();
 
 const DEFAULT_HEADERS = {
   "Content-Type": "application/json",
@@ -83,18 +82,17 @@ export default class SlackClient {
   }
 
   static async findChannelMessages(channelCode) {
-
         try {
           const response = await axios.get(
               `https://slack.com/api/conversations.history?channel=${channelCode}&pretty=1`,
               {
                 headers: {
-                  "Authorization": authToken,
+                  "Authorization": "Bearer " + authToken,
                   ...DEFAULT_HEADERS
                 }
               }
           );
-          console.log("[SlackClient] Response:", response.data);
+          return response;
         } catch (error) {
           console.error("[SlackClient] Error:", error);
         }

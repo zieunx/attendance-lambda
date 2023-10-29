@@ -23,6 +23,82 @@ const getCurrentDate = () => {
 };
 
 export default class AttendanceService {
+  static async getAttendanceInfo(attachment) {
+    console.log("attachment: ", attachment)
+    let commitUrl = "";
+    const commitUrlMatch = attachment.pretext.match(/<([^|>]+)\|[^>]+>/);
+    if (commitUrlMatch) {
+      commitUrl = commitUrlMatch[1];
+    }
+    const commitContent = attachment.text;
+    const repositoryUrl = attachment.footer.match(/<([^|]+)\|/)[1];
+
+    const userMatch = attachment.pretext.match(/<([^|>]+)\|([^>]+)>$/);
+    let userGithubUrl = "";
+    let userGithubId = "";
+    if (userMatch) {
+      userGithubUrl = userMatch[1];
+      userGithubId = userMatch[2];
+    }
+
+    return {commitUrl, commitContent, repositoryUrl, userGithubUrl, userGithubId};
+  }
+
+  static async createAttendanceByExistMessages() {
+    const slackResponse = await SlackClient.findChannelMessages(SlackClient.attendanceChannelCode);
+
+    const list = Promise.all(slackResponse.data.messages
+      .filter(row => row.bot_id === "B05DPFWDXFH")
+      .filter(row => !!row.attachments && row.attachments.length > 0)
+      .map(async (row) => {
+        console.log("row!!! ", row)
+        const attachment = row.attachments[0];
+
+        const {
+          commitUrl,
+          commitContent,
+          repositoryUrl,
+          userGithubUrl,
+          userGithubId
+        } = await this.getAttendanceInfo(attachment);
+
+        const timestampInMillis = row.ts * 1000;
+        const date = new Date(timestampInMillis);
+        const koreanDate = new Date(date.getTime() + (9 * 60 * 60 * 1000));
+        const koreanDateString = koreanDate.toISOString().replace("Z", "+09:00");
+
+        return {
+          commitUrl,
+          commitContent,
+          repositoryUrl,
+          userGithubUrl,
+          userGithubId,
+          eventDateTime: koreanDateString
+        };
+      })
+      .filter((obj) =>
+        !obj.commitUrl || !obj.commitContent || !obj.repositoryUrl || !obj.userGithubUrl || !obj.userGithubId || !obj.eventDateTime
+      )
+    );
+    for (const attendance of list) {
+      const repositoryResult = await AttendanceRepository.putItem(attendance);
+      console.log(
+        "[AttendanceService] repository result code: ",
+        repositoryResult.$metadata.httpStatusCode
+      );
+
+      if (repositoryResult.$metadata.httpStatusCode == 200) {
+        const user = await UserRepository.findByGitId(userGithubId);
+        console.log("[AttendanceService] user: ", JSON.stringify(user));
+
+        await SlackClient.sendMessage(
+          SlackClient.testChannelUrl,
+          SlackClient.getAttachments(user, attendance)
+        );
+      }
+    }
+  }
+
   static async createAttendance(requestBody) {
     console.log(
       "[AttendanceService] requestBody: ",
@@ -33,14 +109,13 @@ export default class AttendanceService {
     }
     const attachment = requestBody.event.attachments[0];
 
-    // Extracting the desired values
-    const commitUrl = attachment.text.match(/<([^|]+)\|/)[1];
-    const commitContent = attachment.text.split(" - ")[1];
-    const repositoryUrl = attachment.footer.match(/<([^|]+)\|/)[1];
-
-    const userMatch = attachment.pretext.match(/<([^|]+)\|([^>]+)>$/);
-    const userGithubUrl = userMatch[1];
-    const userGithubId = userMatch[2];
+    const {
+      commitUrl,
+      commitContent,
+      repositoryUrl,
+      userGithubUrl, 
+      userGithubId
+    } = await this.getAttendanceInfo(attachment);
 
     const eventTime = requestBody.event_time;
     const eventDateTimeUTC = new Date(eventTime * 1000);

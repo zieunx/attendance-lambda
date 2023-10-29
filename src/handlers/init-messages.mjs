@@ -1,12 +1,8 @@
 import Response from "../common/Response.mjs";
-import SlackClient from "../infra/SlackClient.mjs";
+import AttendanceService from "../service/AttendanceService.mjs";
 
 export const initMessagesHandler = async (event) => {
-  const slackResponse = await SlackClient.findChannelMessages(
-      SlackClient.attendanceChannelCode
-  );
-
-  console.log("")
+  const result = await AttendanceService.createAttendanceByExistMessages();
 
   return Response.success({
     message: "initMessages",
