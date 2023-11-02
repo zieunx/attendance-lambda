@@ -64,6 +64,7 @@ Resources:
       Environment:
         Variables:
           AUTHORIZATION_TOKEN: ${replace-token}
+          ATTENDANCE_TABLE: Attendance
       Events:
         Api:
           Type: Api

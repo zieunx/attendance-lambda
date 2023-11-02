@@ -30,7 +30,7 @@ const getCurrentDate = (dateString) => {
 
 export default class SlackClient {
   static testChannelUrl =
-    "https://hooks.slack.com/services/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";
+    "https://hooks.slack.com/services/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";
   static attendanceChannelCode = "C05E427CX7U";
 
   static getAttachments = (user, attendance) => {
