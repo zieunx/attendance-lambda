@@ -63,7 +63,8 @@ Resources:
         a DynamoDB table.
       Environment:
         Variables:
-          AUTHORIZATION_TOKEN: ${replace-token}
+          SLACK_AUTHORIZATION_TOKEN: ${replace-token}
+          SLACK_INCOMING_WEBHOOK_URL: ${replace-url}
           ATTENDANCE_TABLE: Attendance
       Events:
         Api:

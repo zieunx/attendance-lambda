@@ -4,7 +4,8 @@ const DEFAULT_HEADERS = {
   "Content-Type": "application/json",
 };
 
-const authToken = process.env.AUTHORIZATION_TOKEN;
+const authToken = process.env.SLACK_AUTHORIZATION_TOKEN;
+const incomingWebhookUrl = process.env.SLACK_INCOMING_WEBHOOK_URL;
 
 const getCurrentDate = (dateString) => {
   var now = null;
@@ -29,8 +30,7 @@ const getCurrentDate = (dateString) => {
 };
 
 export default class SlackClient {
-  static testChannelUrl =
-    "https://hooks.slack.com/services/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";
+  static testChannelUrl = `https://hooks.slack.com/${incomingWebhookUrl}`;
   static attendanceChannelCode = "C05E427CX7U";
 
   static getAttachments = (user, attendance) => {
@@ -68,7 +68,7 @@ export default class SlackClient {
     };
 
     console.log(
-      "[SlackClient] url: " + url + ", data: " + JSON.stringify(data)
+      `[SlackClient] url ${url}, data: ${JSON.stringify(data)}`
     );
 
     try {
