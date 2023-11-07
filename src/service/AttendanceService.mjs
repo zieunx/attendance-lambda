@@ -51,6 +51,9 @@ function getAttendanceInfo(attachment) {
 }
 
 export default class AttendanceService {
+  static async findAll() {
+    await AttendanceRepository.findAll();
+  }
   static async createAttendanceByExistMessages() {
     const slackResponse = await SlackClient.findChannelMessages(SlackClient.attendanceChannelCode);
 
@@ -86,7 +89,6 @@ export default class AttendanceService {
          !!obj.commitUrl && !!obj.commitContent && !!obj.repositoryUrl && !!obj.userGithubUrl && !!obj.userGithubId && !!obj.eventDateTime
       );
     for (const attendance of list) {
-      console.log("attendance3: ", JSON.stringify(attendance));
       const repositoryResult = await AttendanceRepository.putItem(attendance);
       console.log(
         "[AttendanceService] repository result code: ",
@@ -106,10 +108,6 @@ export default class AttendanceService {
   }
 
   static async createAttendance(requestBody) {
-    console.log(
-      "[AttendanceService] requestBody: ",
-      JSON.stringify(requestBody)
-    );
     if (!requestBody.event || !requestBody.event.attachments) {
       return;
     }
@@ -121,7 +119,7 @@ export default class AttendanceService {
       repositoryUrl,
       userGithubUrl, 
       userGithubId
-    } = await this.getAttendanceInfo(attachment);
+    } = getAttendanceInfo(attachment);
 
     const eventTime = requestBody.event_time;
     const eventDateTimeUTC = new Date(eventTime * 1000);
@@ -136,12 +134,10 @@ export default class AttendanceService {
       eventDateTime: eventDateTimeUTC.toISOString(),
     };
 
-    console.log("[AttendanceService] attendance: ", attendance);
-
     // 출석 채널이 아니면 데이터를 저장하지 않음.
-    // if (!requestBody.event.channel || requestBody.event.channel != ATTENDANCE_CHANNEL_CODE) {
-    // return;
-    // }
+    if (!requestBody.event.channel || requestBody.event.channel != ATTENDANCE_CHANNEL_CODE) {
+      return;
+    }
     const repositoryResult = await AttendanceRepository.putItem(attendance);
     console.log(
       "[AttendanceService] repository result code: ",

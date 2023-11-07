@@ -37,6 +37,8 @@ Resources:
             TableName: GitConnection
         - DynamoDBCrudPolicy:
             TableName: User
+        - DynamoDBCrudPolicy:
+            TableName: AttendanceGroupingDate
       Environment:
         Variables:
           # Make table names accessible as environment variables from function code during execution
@@ -71,6 +73,27 @@ Resources:
           Type: Api
           Properties:
             Path: /init-messages
+            Method: POST
+  attendanceGroupingDateFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: src/handlers/attendance-group-by-date.attendanceGroupingByDateHandler
+      Runtime: nodejs18.x
+      Architectures:
+        - x86_64
+      MemorySize: 128
+      Timeout: 100
+      Description:
+        A simple example includes a HTTP post method to add one item to
+        a DynamoDB table.
+      Environment:
+        Variables:
+          ATTENDANCE_GROUPING_DATE_TABLE: AttendanceGroupingDate
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /attendance/grouping-date
             Method: POST
 
   ApplicationResourceGroup:
