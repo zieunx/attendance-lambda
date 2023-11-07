@@ -88,6 +88,7 @@ Resources:
         a DynamoDB table.
       Environment:
         Variables:
+          ATTENDANCE_TABLE: Attendance
           ATTENDANCE_GROUPING_DATE_TABLE: AttendanceGroupingDate
       Events:
         Api:
