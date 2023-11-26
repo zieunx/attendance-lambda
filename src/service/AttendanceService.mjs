@@ -125,10 +125,8 @@ export default class AttendanceService {
     if (repositoryResult.$metadata.httpStatusCode == 200) {
       const user = await UserRepository.findByGitId(userGithubId);
 
-      console.log("중간점검 SlackClient.testChannelUrl:" + SlackClient.testChannelUrl);
-
       await SlackClient.sendMessage(
-        SlackClient.testChannelUrl,
+        SlackClient.slackWebhookUrl,
         SlackClient.getAttachments(user, attendance)
       );
     }
