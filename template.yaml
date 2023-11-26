@@ -27,8 +27,7 @@ Resources:
       MemorySize: 128
       Timeout: 100
       Description:
-        A simple example includes a HTTP post method to add one item to
-        a DynamoDB table.
+        출석 채널에 작성된 메시지를 변환하여 출석정보를 저장하는 함수
       Policies:
         # Give Create/Read/Update/Delete Permissions to the SampleTable
         - DynamoDBCrudPolicy:
@@ -45,6 +44,7 @@ Resources:
           ATTENDANCE_TABLE: Attendance
           GIT_CONNECTION_TABLE: GitConnection
           USER_TABLE: User
+          SLACK_INCOMING_WEBHOOK_URL: ${replace-url}
       Events:
         Api:
           Type: Api
@@ -61,8 +61,7 @@ Resources:
       MemorySize: 128
       Timeout: 100
       Description:
-        A simple example includes a HTTP post method to add one item to
-        a DynamoDB table.
+        기존에 존재하던 메시지를 전부 불러와서 출석 정보를 저장하는 함수
       Environment:
         Variables:
           SLACK_AUTHORIZATION_TOKEN: ${replace-token}

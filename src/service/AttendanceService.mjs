@@ -2,35 +2,25 @@ import AttendanceRepository from "../repository/AttendanceRepository.mjs";
 import UserRepository from "../repository/UserRepository.mjs";
 import SlackClient from "../infra/SlackClient.mjs";
 
-const ATTENDANCE_CHANNEL_CODE = "C05E427CX7U";
-
-const getCurrentDate = () => {
-  const now = new Date();
-
-  // 한국은 UTC+9 이므로 9시간(32400000 밀리초)를 더한다.
-  now.setMilliseconds(now.getMilliseconds() + 32400000);
-
-  const year = now.getUTCFullYear();
-  const month = String(now.getUTCMonth() + 1).padStart(2, "0");
-  const day = String(now.getUTCDate()).padStart(2, "0");
-  const hours = String(now.getUTCHours()).padStart(2, "0");
-  const minutes = String(now.getUTCMinutes()).padStart(2, "0");
-  const seconds = String(now.getUTCSeconds()).padStart(2, "0");
-
-  const formattedDate = `${year}-${month}-${day} (${hours}:${minutes}:${seconds})`;
-
-  return formattedDate;
-};
-
-function getKoreanDateString(row) {
-  const timestampInMillis = row.ts * 1000;
-  const date = new Date(timestampInMillis);
+/**
+ * 문자 혹은 숫자의 timestamp를 한국시간 문자열로 리턴한다. (2023-08-12T11:24:46.000+09:00)
+ * @param row
+ * @returns {string}
+ */
+const getKoreanDateString = (row) => {
+  const timestamp = Math.floor(typeof row === 'string' ? parseFloat(row) : row);
+  const date = new Date(timestamp * 1000);
   const koreanDate = new Date(date.getTime() + (9 * 60 * 60 * 1000));
   const koreanDateString = koreanDate.toISOString().replace("Z", "+09:00");
   return koreanDateString;
 }
 
-function getAttendanceInfo(attachment) {
+/**
+ * 메시지 내용을 출석 정보로 만들어 리턴한다.
+ * @param attachment
+ * @returns {{commitContent: *, commitUrl: string, userGithubUrl: string, userGithubId: string, repositoryUrl: *}}
+ */
+const getAttendanceInfo = (attachment) => {
   let commitUrl = "";
   const commitUrlMatch = attachment.pretext.match(/<([^|>]+)\|[^>]+>/);
   if (commitUrlMatch) {
@@ -75,7 +65,7 @@ export default class AttendanceService {
           userGithubUrl,
           userGithubId
         } = getAttendanceInfo(attachment);
-        const koreanDateString = getKoreanDateString(row);
+        const koreanDateString = getKoreanDateString(row.ts);
         return {
           commitUrl,
           commitContent,
@@ -94,16 +84,6 @@ export default class AttendanceService {
         "[AttendanceService] repository result code: ",
         repositoryResult.$metadata.httpStatusCode
       );
-
-      if (repositoryResult.$metadata.httpStatusCode == 200) {
-        const user = await UserRepository.findByGitId(attendance.userGithubId);
-        console.log("[AttendanceService] user: ", JSON.stringify(user));
-
-        await SlackClient.sendMessage(
-          SlackClient.testChannelUrl,
-          SlackClient.getAttachments(user, attendance)
-        );
-      }
     }
   }
 
@@ -121,21 +101,19 @@ export default class AttendanceService {
       userGithubId
     } = getAttendanceInfo(attachment);
 
-    const eventTime = requestBody.event_time;
-    const eventDateTimeUTC = new Date(eventTime * 1000);
-    eventDateTimeUTC.setHours(eventDateTimeUTC.getHours() + 9);
-
     const attendance = {
       commitUrl,
       commitContent,
       repositoryUrl,
       userGithubUrl,
       userGithubId,
-      eventDateTime: eventDateTimeUTC.toISOString(),
+      eventDateTime: getKoreanDateString(requestBody.event_time),
     };
 
     // 출석 채널이 아니면 데이터를 저장하지 않음.
-    if (!requestBody.event.channel || requestBody.event.channel != ATTENDANCE_CHANNEL_CODE) {
+    const isTest = typeof requestBody.test !== 'undefined' && requestBody.test === true
+    const isNotAttendanceChannel = !requestBody.event.channel || requestBody.event.channel !== SlackClient.attendanceChannelCode
+    if (isTest || (isNotAttendanceChannel)) {
       return;
     }
     const repositoryResult = await AttendanceRepository.putItem(attendance);
@@ -146,7 +124,8 @@ export default class AttendanceService {
 
     if (repositoryResult.$metadata.httpStatusCode == 200) {
       const user = await UserRepository.findByGitId(userGithubId);
-      console.log("[AttendanceService] user: ", JSON.stringify(user));
+
+      console.log("중간점검 SlackClient.testChannelUrl:" + SlackClient.testChannelUrl);
 
       await SlackClient.sendMessage(
         SlackClient.testChannelUrl,
