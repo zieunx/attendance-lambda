@@ -59,7 +59,7 @@ Resources:
       Architectures:
         - x86_64
       MemorySize: 128
-      Timeout: 100
+      Timeout: 3000
       Description:
         기존에 존재하던 메시지를 전부 불러와서 출석 정보를 저장하는 함수
       Environment:
@@ -83,8 +83,7 @@ Resources:
       MemorySize: 128
       Timeout: 100
       Description:
-        A simple example includes a HTTP post method to add one item to
-        a DynamoDB table.
+        기존 출석 정보를 년월일로 그룹핑하여 출석
       Environment:
         Variables:
           ATTENDANCE_TABLE: Attendance

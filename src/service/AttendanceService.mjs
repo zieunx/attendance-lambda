@@ -42,7 +42,9 @@ const getAttendanceInfo = (attachment) => {
 
 export default class AttendanceService {
   static async findAll() {
-    await AttendanceRepository.findAll();
+    const result = await AttendanceRepository.findAll();
+
+    return result["Items"];
   }
   static async createAttendanceByExistMessages() {
     const slackResponse = await SlackClient.findChannelMessages(SlackClient.attendanceChannelCode);
@@ -84,6 +86,7 @@ export default class AttendanceService {
         "[AttendanceService] repository result code: ",
         repositoryResult.$metadata.httpStatusCode
       );
+      await new Promise(resolve => setTimeout(resolve, 3000)); // 3초 기다림
     }
   }
 

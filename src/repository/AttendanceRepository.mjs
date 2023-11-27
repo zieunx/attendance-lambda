@@ -1,5 +1,5 @@
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
-import {DynamoDBDocumentClient, PutCommand, QueryCommand} from "@aws-sdk/lib-dynamodb";
+import {DynamoDBDocumentClient, PutCommand, ScanCommand} from "@aws-sdk/lib-dynamodb";
 
 const ddbDocClient = new DynamoDBClient({ region: "ap-northeast-2" });
 const docClient = DynamoDBDocumentClient.from(ddbDocClient);
@@ -12,10 +12,12 @@ function generateUUID() {
 
 export default class AttendanceRepository {
   static async findAll() {
+    const command = new ScanCommand({
+      TableName: AttendanceTableName
+    });
+
     return await docClient.send(
-        new QueryCommand({
-          TableName: AttendanceTableName
-        })
+        command
     );
   }
 
